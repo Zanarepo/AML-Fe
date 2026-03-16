@@ -65,6 +65,12 @@ export function DashboardProvider({ children }) {
   useEffect(() => {
     async function initAuth() {
       const { data: { user: currentUser } } = await supabase.auth.getUser();
+      
+      // Clean up auth fragments from URL (e.g., #access_token=...)
+      if (typeof window !== 'undefined' && window.location.hash) {
+        window.history.replaceState(null, '', window.location.pathname);
+      }
+
       if (!currentUser) {
         setLoading(false);
         return;
